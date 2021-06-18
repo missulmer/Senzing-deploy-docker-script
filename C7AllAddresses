@@ -1,0 +1,49 @@
+// this is the paylod from the following call GET: /customer/:customerId/address
+//OPTIONS: optional query parameters include: searchText.
+//RESPONSE: responds with an array of address objects and a total count.
+//reference location https://api-docs.commerce7.com/docs/addresses
+//the lines commented out are NOT used from Entity Resolution with Senzing for the Obscure use cases.
+
+{
+ "customerAddresses": [{
+  "id": "4a87ac0b-8b97-46ea-af15-bb579e5f4bcd",
+  "customerId": "9d30102b-afdf-42ca-9919-1500c730cac8",
+  "birthDate": "1972-10-03",
+  "firstName": "Jason",
+  "lastName": "Andres",
+  "company": "Commerce7",
+  "phone": "+17783477874",
+  "address": "289 Alexander Street",
+  "address2": "Unit #624",
+  "city": "Vancouver",
+  "stateCode": "BC",
+  "zipCode": "V6A1C2",
+  "countryCode": "CA",
+//"isDefault": false,
+
+//The created and updated at fields should be used to create recordIDs required to prevent SZ from overwriting records it has seen in the past with updated features and attributes
+//We need to keep the full history of features seen on members over time, only passing in unique recordIDs will prevent overwriting.
+
+  "createdAt": "2018-05-22T18:27:35.998Z",
+  "updatedAt": "2018-05-22T18:31:31.487Z"
+
+ }, {
+  "id": "5057e055-2ca6-4421-bf63-6c2a164e21ae",
+  "customerId": "9d30102b-afdf-42ca-9919-1500c730cac8",
+  "birthDate": "1972-10-03",
+  "firstName": "Jason",
+  "lastName": "Andres",
+  "company": "Commerce7",
+  "phone": "+17783477874",
+  "address": "33925 Araki Court",
+  "address2": "Unit #9",
+  "city": "Mission",
+  "stateCode": "BC",
+  "zipCode": "V2V7R4",
+  "countryCode": "CA",
+  "isDefault": true,
+  "createdAt": "2018-05-22T17:51:08.878Z",
+  "updatedAt": "2018-05-22T17:51:08.878Z"
+ }],
+ "total": 2
+}
