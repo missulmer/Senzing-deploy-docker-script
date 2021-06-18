@@ -1,7 +1,8 @@
-email": "alice@gmail.com"  -  The email of the person on the waitlist
-referralSource": "alexander@gmail.com" - The email of the person who referred them
-"referredEmails": [
-        "janice@gmail.com" - The email(s) of all person subsequently referred by the person on the waitlist.
+//Reference https://docs.referlist.co/#/?id=exporting-signups
+//email": "alice@gmail.com"  -  The email of the person on the waitlist
+//referralSource": "alexander@gmail.com" - The email of the person who referred them
+//"referredEmails": [
+//        "janice@gmail.com" - The email(s) of all person subsequently referred by the person on the waitlist.
 Sample:
 {
     "email": "alice@gmail.com",
