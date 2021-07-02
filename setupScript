@@ -1,24 +1,24 @@
 #!/bin/bash
 # Update Packages
-sudo apt-get update -y
-sudo apt-get upgrade -y
+#sudo apt-get update -y
+#sudo apt-get upgrade -y
 
 # Set up Desktop Environment
-sudo apt-get install gnome-shell -y
-sudo apt-get install ubuntu-gnome-desktop -y
-sudo apt-get install autocutsel -y
-sudo apt-get install gnome-core -y
-sudo apt-get install gnome-panel -y
-sudo apt-get install gnome-themes-standard -y
+#sudo apt-get install gnome-shell -y
+#sudo apt-get install ubuntu-gnome-desktop -y
+#sudo apt-get install autocutsel -y
+#sudo apt-get install gnome-core -y
+#sudo apt-get install gnome-panel -y
+#sudo apt-get install gnome-themes-standard -y
 
 # Install PPA/Git
-sudo add-apt-repository ppa:git-core/ppa
-sudo apt update -y
-sudo apt install git -y
+#sudo add-apt-repository ppa:git-core/ppa
+#sudo apt update -y
+#sudo apt install git -y
 
 # Set up VNC Server
-sudo apt-get install tightvncserver -y
-sudo touch ~/.Xresources
+#sudo apt-get install tightvncserver -y
+#sudo touch ~/.Xresources
 
 # Set Environment Variables - Senzing GH repo
 export GIT_ACCOUNT=senzing
@@ -40,6 +40,7 @@ cd  ${GIT_ACCOUNT_DIR}
 git clone  --recurse-submodules ${GIT_REPOSITORY_URL}
 
 # Set Environment Variables - Docker/host directories
+export SENZING_VOLUME=/opt/my-senzing
 export SENZING_DATA_DIR=${SENZING_VOLUME}/data
 export SENZING_DATA_VERSION_DIR=${SENZING_DATA_DIR}/2.0.0
 export SENZING_ETC_DIR=${SENZING_VOLUME}/etc
@@ -50,7 +51,7 @@ export RABBITMQ_DIR=${SENZING_VAR_DIR}/rabbitmq
 
 # Create directory for RabbitMQ Persistence
 sudo mkdir -p ${RABBITMQ_DIR}
-sudo chmod 770 ${RABBITMQ_DIR}
+sudo chmod 777 ${RABBITMQ_DIR}
 
 # Set Environment Variables - Accept Senzing EULA
 export SENZING_ACCEPT_EULA="I_ACCEPT_THE_SENZING_EULA"
