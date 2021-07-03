@@ -57,10 +57,8 @@ sudo chmod 777 ${RABBITMQ_DIR}
 export SENZING_ACCEPT_EULA="I_ACCEPT_THE_SENZING_EULA"
 
 # Install Senzing
-sudo \
-  --preserve-env \
-  docker-compose --file ~/senzing.git/docker-compose-demo/resources/senzing/docker-compose-senzing-installation.yaml up
-# Install RabbitMQ-Postgres Senzing Infra
-sudo \
-  --preserve-env \
-  docker-compose --file ~/senzing.git/docker-compose-demo/resources/postgresql/docker-compose-rabbitmq-postgresql.yaml up
+sudo --preserve-env docker-compose --file /Users/lauraulmer/docker-compose-demo/resources/senzing/docker-compose-senzing-installation.yaml up
+
+#sudo \
+ # --preserve-env \
+ # docker-compose --file ~/senzing.git/docker-compose-demo/resources/postgresql/docker-compose-rabbitmq-postgresql.yaml up
