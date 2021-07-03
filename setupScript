@@ -65,3 +65,5 @@ sudo --preserve-env docker-compose --file /Users/lauraulmer/docker-compose-demo/
 #sudo \
  # --preserve-env \
  # docker-compose --file ~/senzing.git/docker-compose-demo/resources/postgresql/docker-compose-rabbitmq-postgresql.yaml up
+
+sudo --preserve-env docker-compose --file /Users/lauraulmer/docker-compose-demo/resources/postgresql/docker-compose-rabbitmq-postgresql.yaml up
