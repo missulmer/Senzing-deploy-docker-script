@@ -49,6 +49,9 @@ export SENZING_VAR_DIR=${SENZING_VOLUME}/var
 export POSTGRES_DIR=${SENZING_VAR_DIR}/postgres
 export RABBITMQ_DIR=${SENZING_VAR_DIR}/rabbitmq
 
+#point the senzing volume to local machine
+sudo chmod 777 $SENZING_VOLUME
+
 # Create directory for RabbitMQ Persistence
 sudo mkdir -p ${RABBITMQ_DIR}
 sudo chmod 777 ${RABBITMQ_DIR}
