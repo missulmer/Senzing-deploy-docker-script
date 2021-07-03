@@ -28,11 +28,11 @@ export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
 export GIT_REPOSITORY_URL="https://github.com/${GIT_ACCOUNT}/${GIT_REPOSITORY}.git"
 
 # Install Docker
-sudo apt install docker.io -y
+brew install docker
 
 # Install Docker Compose
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+#sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#sudo chmod +x /usr/local/bin/docker-compose
 
 # Clone senzing GH repo
 mkdir --parents ${GIT_ACCOUNT_DIR}
@@ -40,7 +40,7 @@ cd  ${GIT_ACCOUNT_DIR}
 git clone  --recurse-submodules ${GIT_REPOSITORY_URL}
 
 # Set Environment Variables - Docker/host directories
-export SENZING_VOLUME=/opt/my-senzing
+export SENZING_VOLUME=/dir/my-senzing
 export SENZING_DATA_DIR=${SENZING_VOLUME}/data
 export SENZING_DATA_VERSION_DIR=${SENZING_DATA_DIR}/2.0.0
 export SENZING_ETC_DIR=${SENZING_VOLUME}/etc
