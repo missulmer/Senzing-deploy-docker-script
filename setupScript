@@ -1,24 +1,3 @@
-#!/bin/bash
-# Update Packages
-#sudo apt-get update -y
-#sudo apt-get upgrade -y
-
-# Set up Desktop Environment
-#sudo apt-get install gnome-shell -y
-#sudo apt-get install ubuntu-gnome-desktop -y
-#sudo apt-get install autocutsel -y
-#sudo apt-get install gnome-core -y
-#sudo apt-get install gnome-panel -y
-#sudo apt-get install gnome-themes-standard -y
-
-# Install PPA/Git
-#sudo add-apt-repository ppa:git-core/ppa
-#sudo apt update -y
-#sudo apt install git -y
-
-# Set up VNC Server
-#sudo apt-get install tightvncserver -y
-#sudo touch ~/.Xresources
 
 # Set Environment Variables - Senzing GH repo
 export GIT_ACCOUNT=senzing
@@ -29,10 +8,6 @@ export GIT_REPOSITORY_URL="https://github.com/${GIT_ACCOUNT}/${GIT_REPOSITORY}.g
 
 # Install Docker
 brew install docker
-
-# Install Docker Compose
-#sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-#sudo chmod +x /usr/local/bin/docker-compose
 
 # Clone senzing GH repo
 mkdir --parents ${GIT_ACCOUNT_DIR}
@@ -62,8 +37,5 @@ export SENZING_ACCEPT_EULA="I_ACCEPT_THE_SENZING_EULA"
 # Install Senzing
 sudo --preserve-env docker-compose --file /Users/lauraulmer/docker-compose-demo/resources/senzing/docker-compose-senzing-installation.yaml up
 
-#sudo \
- # --preserve-env \
- # docker-compose --file ~/senzing.git/docker-compose-demo/resources/postgresql/docker-compose-rabbitmq-postgresql.yaml up
-
+#set up db and rabbitMQ
 sudo --preserve-env docker-compose --file /Users/lauraulmer/docker-compose-demo/resources/postgresql/docker-compose-rabbitmq-postgresql.yaml up
