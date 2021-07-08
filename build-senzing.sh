@@ -1,6 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 # vim: ai:sw=4:ts=4:sta:et:fo=croql
 # Author: Gustavo Kuhn Andriotti
+#
+# Tested on 2021-07-06 for:
+# - macOS Big Sur (11.4)
+# - Ubuntu 21.04
 #
 
 # must be the first thing
@@ -31,18 +35,28 @@ SZ_EULA_VAR_NAME="SENZING_ACCEPT_EULA"
 
 
 # Required free ports
+# Source: https://github.com/Senzing/docker-compose-demo/blob/master/resources/postgresql/docker-compose-rabbitmq-postgresql.yaml
 set -a SZ_DOCKER_PORTS
 SZ_DOCKER_PORTS+=( 5432 ) # PostgreSQL
 SZ_DOCKER_PORTS+=( 5672 ) # RabbitMQ
 SZ_DOCKER_PORTS+=( 8250 ) # Senzing API
+SZ_DOCKER_PORTS+=( 8251 ) # Senzing Webapp
 SZ_DOCKER_PORTS+=( 8254 ) # Senzing xterm
-SZ_DOCKER_PORTS+=( 9180 ) # Senzing HTTP
+SZ_DOCKER_PORTS+=( 9171 ) # PHP PGAdmin HTTP
+SZ_DOCKER_PORTS+=( 9172 ) # PHP PGAdmin HTTPS
+SZ_DOCKER_PORTS+=( 9178 ) # Jupyter HTTP
+SZ_DOCKER_PORTS+=( 9180 ) # Swagger UI
 SZ_DOCKER_PORTS+=( 9181 ) # SSH container
+SZ_DOCKER_PORTS+=( 15672 ) # RabbitMQ
 
 # Path within the GitHub repo
 set -a SZ_DOCKER_YAML_FILES
 SZ_DOCKER_YAML_FILES+=( "resources/senzing/docker-compose-senzing-installation.yaml" )
 SZ_DOCKER_YAML_FILES+=( "resources/postgresql/docker-compose-rabbitmq-postgresql.yaml" )
+
+# Linux/macOS differences
+MACOS_DOCKER_COMPOSE_CMD="docker compose"
+LINUX_DOCKER_COMPOSE_CMD="docker-compose"
 
 
 function help()
@@ -86,7 +100,8 @@ function error_msg_exit()
 {
     local MSG="${1}"
 
-    echo "\n[ERROR] ${MSG}" >&2
+    echo
+    echo "[ERROR] ${MSG}" >&2
     exit 1
 }
 
@@ -123,11 +138,26 @@ function has_requirement()
 }
 
 
+function is_linux()
+{
+    local KERNEL=$(uname -s)
+    if [[ "${KERNEL}" == "Linux" ]]
+    then
+        echo 1
+    else
+        echo 0
+    fi
+}
+
+
 function has_all_requirements()
 {
     log_msg "Checking requirements"
     has_requirement "docker" "https://www.docker.com/"
-    has_requirement "docker-compose" "https://www.docker.com/"
+    if [[ "$(is_linux)" == "1" ]]
+    then
+        has_requirement "docker-compose" "https://www.docker.com/"
+    fi
     has_requirement "git" "https://git-scm.com/"
     has_requirement "lsof" "https://en.wikipedia.org/wiki/Lsof"
 }
@@ -182,6 +212,11 @@ function parse_cli_args()
                 ;;
         esac
     done
+
+    if [[ -z ${SZ_EULA_VALUE} ]]
+    then
+        error_msg_help "EULA has not been accepted, without it Senzing does not work"
+    fi
 }
 
 
@@ -215,6 +250,21 @@ function git_clone()
 }
 
 
+function has_docker_access_to_sz_volume()
+{
+    local SZ_DIR="${1}"
+
+    log_msg "Checking Docker access to Senzing volume: ${SZ_DIR}"
+    local MOUNTING_POINT="/test-access"
+    local ACCESS_TEST_FILE="${MOUNTING_POINT}/docker_has_access"
+    docker run \
+        -v ${SZ_DIR}:${MOUNTING_POINT} \
+        -it alpine \
+        touch ${ACCESS_TEST_FILE} 1>&2 \
+        || error_msg_exit "Docker cannot access ${SZ_DIR} properly. If you are using macOS, check: https://docs.docker.com/docker-for-mac/#file-sharing. If on ubuntu and you got 'Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock' check: https://linuxhandbook.com/docker-permission-denied/"
+}
+
+
 function sz_volume()
 {
     local SZ_DIR="${1}"
@@ -222,6 +272,9 @@ function sz_volume()
     log_msg "Creating Senzing volume and subdirs: ${SZ_DIR}"
     mkdir -p ${SZ_DIR}
     chmod 777 ${SZ_DIR}
+
+    has_docker_access_to_sz_volume ${SZ_DIR}
+
     for NDX in $(seq 0 $(expr ${#SENZING_VOLUME_DIR_VARNAME_SUBDIRS[@]} - 1))
     do
         local VARNAME_SUBDIR="${SENZING_VOLUME_DIR_VARNAME_SUBDIRS[$NDX]}"
@@ -272,7 +325,7 @@ function check_port()
 {
     local PORT="${1}"
 
-    lsof -i -n -P | grep -e "[[:space:]]\+${PORT}[[:space:]]\+"
+    lsof -i -n -P | grep -e ":${PORT}[[:space:]]\+"
 }
 
 
@@ -295,10 +348,14 @@ function docker_compose()
     local YAML_FILE="${1}"
 
     log_msg "Creating docker from ${YAML_FILE}"
-    docker compose --file ${YAML_FILE} up 1>&2 \
+    local DOCKER_COMPOSE_CMD=${MACOS_DOCKER_COMPOSE_CMD} 
+    if [[ "$(is_linux)" == "1" ]]
+    then
+        DOCKER_COMPOSE_CMD=${LINUX_DOCKER_COMPOSE_CMD} 
+    fi
+    ${DOCKER_COMPOSE_CMD} --file ${YAML_FILE} up 1>&2 \
         || error_msg_exit "Could compose ${YAML_FILE}"
 }
-
 
 
 function sz_docker()
@@ -321,7 +378,7 @@ function sz_docker()
 }
 
 
-# main()
+# fetch()
 has_all_requirements
 parse_cli_args ${CLI_ARGS[@]}
 sz_volume "${SENZING_VOLUME_DIR}"
